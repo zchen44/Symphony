@@ -1,0 +1,2 @@
+# Symphony
+Discord Bot Project
