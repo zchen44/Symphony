@@ -12,6 +12,7 @@
     <Name>DiscordBot</Name>
     <RootNamespace>DiscordBot</RootNamespace>
     <InterpreterId>MSBuild|discordbot|$(MSBuildProjectFullPath)</InterpreterId>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
