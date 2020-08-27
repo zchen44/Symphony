@@ -125,6 +125,8 @@ async def register(context):
     try:
         if "late" in task and "pass" in task:
             await late_pass_registration(context)
+        elif "movie" in task and "name" in task:
+            await movie_name_registration(context, task)
         else:
             await context.channel.send("Could not match item to register")
     except Exception as e:
@@ -139,6 +141,19 @@ async def late_pass_registration(context):
             with open(("images/"+str(context.author.id)+".png"), 'wb+') as out_file:
                 shutil.copyfileobj(r.raw, out_file)
                 await context.channel.send("Your late pass has been registered")
+
+async def movie_name_registration(context, args):
+    args.remove("movie")
+    args.remove("name")
+    if args:
+        nameList = json.load(open('movieNames.json'))
+        viewerName = ' '.join(args)
+        with open('movieNames.json', 'w+') as fp:
+            nameList[viewerName] = context.author.id
+            json.dump(nameList, fp)
+            await context.channel.send("Your movie name has been registered")
+    else:
+        await context.channel.send("No name has been entered")
 
 # @client.command(name='num_messages',
 #                description="Tells you how many messages you've posted in this channel maxed at 100",
@@ -234,4 +249,18 @@ async def on_message(message):
         # 			handle = handle.SendMessage("me", message_package)
         # 			await client.send_message(message.channel, ("SMS message was sent to " + user.display_name))
 
-client.run('NDIzNzY3Nzc1MzA4MTUyODMy.DbZ8kQ.beeBUKbXbdbZCMVxXrHux1ZCWYo')
+    # Movie List Webhook
+    elif message.author.id == 748306659423813722:
+        moviePings = json.loads(message.content)
+        movieMessage = '**' + moviePings['movieName'] + '** in ' + str(moviePings['timeUntil']) + ' minutes, '
+        with open('movieNames.json', 'r') as fp:
+            viewerIDs = json.loads(fp.read())
+            for viewer in moviePings['allViewers']:
+                viewer = viewer.lower().strip()
+                if viewerIDs.get(viewer):
+                    movieMessage += "<@" + str(viewerIDs[viewer]) + "> "
+        await message.delete()
+        await message.channel.send(movieMessage)
+
+# client.run('NDIzNzY3Nzc1MzA4MTUyODMy.DbZ8kQ.beeBUKbXbdbZCMVxXrHux1ZCWYo') # prod bot
+client.run('NzQ4MjgzNDczMDA5MzExODU0.X0bLSg.oPvZddp24YRJZlH12sJx4Kx0jXE') #dev bot
