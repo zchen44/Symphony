@@ -117,7 +117,7 @@ async def late(context):
         await context.channel.send("Your late pass isn't registered")
     
 @client.command(name='register',
-                description="Registers something, like late pass(i.e !register late pass)",
+                description="Registers something, such as late pass(i.e !register late pass).\nValid options:\n- late pass: Attach an image to show when using the !late command.\n- movie name: Link a name on the movie sheet to your Discord username so the bot can ping you",
                 brief="Register something",
                 pass_context=True)
 async def register(context):
