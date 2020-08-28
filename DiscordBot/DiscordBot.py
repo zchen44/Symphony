@@ -250,7 +250,8 @@ async def on_message(message):
         # 			await client.send_message(message.channel, ("SMS message was sent to " + user.display_name))
 
     # Movie List Webhook
-    elif message.author.id == 748306659423813722:
+    #748306659423813722 webhook id for test server
+    elif message.author.id == 749034575107457055:
         moviePings = json.loads(message.content)
         movieMessage = '**' + moviePings['movieName'] + '** in ' + str(moviePings['timeUntil']) + ' minutes, '
         with open('movieNames.json', 'r') as fp:
@@ -262,5 +263,5 @@ async def on_message(message):
         await message.delete()
         await message.channel.send(movieMessage)
 
-# client.run('NDIzNzY3Nzc1MzA4MTUyODMy.DbZ8kQ.beeBUKbXbdbZCMVxXrHux1ZCWYo') # prod bot
-client.run('NzQ4MjgzNDczMDA5MzExODU0.X0bLSg.oPvZddp24YRJZlH12sJx4Kx0jXE') #dev bot
+client.run('NDIzNzY3Nzc1MzA4MTUyODMy.DbZ8kQ.beeBUKbXbdbZCMVxXrHux1ZCWYo') # prod bot
+#client.run('NzQ4MjgzNDczMDA5MzExODU0.X0bLSg.oPvZddp24YRJZlH12sJx4Kx0jXE') #dev bot
