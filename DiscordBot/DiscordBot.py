@@ -12,6 +12,7 @@ from datetime import datetime
 import phonenumbers
 import string
 import DiscordUtils  # , SMS
+import sys
 
 # Dictionary of cities where key is the city name and value is a dictionary of metadata like id, country, and coordinates
 CITY_DICT = json.load(open('cities.dict.json', encoding='utf-8'))
@@ -34,11 +35,12 @@ WEATHER_EMOJI = {'01d': ':sunny:',
                  '13n': ':cloud_snow:',
                  '50d': ':fog:',
                  '50n': ':fog:'}
-WEATHER_API_KEY = '66b9927037479f0f151efdf8ed88aebc'
+WEATHER_API_KEY = ''
 BOT_PREFIX = ("?", "!")
 
 client = Bot(command_prefix=BOT_PREFIX)
 
+CONDUCTOR_URL = 'https://conductor-server.uc.r.appspot.com'
 
 @client.event
 async def on_ready():
@@ -251,7 +253,7 @@ async def on_message(message):
 
     # Movie List Webhook
     #748306659423813722 webhook id for test server
-    elif message.author.id == 749034575107457055:
+    elif message.author.id == 749034575107457055: #eventually want to move the id somewhere else
         moviePings = json.loads(message.content)
         movieMessage = '**' + moviePings['movieName'] + '** in ' + str(moviePings['timeUntil']) + ' minutes, '
         with open('movieNames.json', 'r') as fp:
@@ -263,5 +265,18 @@ async def on_message(message):
         await message.delete()
         await message.channel.send(movieMessage)
 
-client.run('NDIzNzY3Nzc1MzA4MTUyODMy.DbZ8kQ.beeBUKbXbdbZCMVxXrHux1ZCWYo') # prod bot
-#client.run('NzQ4MjgzNDczMDA5MzExODU0.X0bLSg.oPvZddp24YRJZlH12sJx4Kx0jXE') #dev bot
+def start(env = 'dev'):
+    try:
+        conductor_cred = json.load(open('.credentials.json'))
+        auth = (env, conductor_cred[env])
+        resp = requests.get( (CONDUCTOR_URL + '/credentials/discord'), auth = auth)
+        token = resp.json()['token']
+        global WEATHER_API_KEY 
+        WEATHER_API_KEY = requests.get( (CONDUCTOR_URL + '/credentials/weather'), auth = auth).json()['token']
+        client.run(token)
+    except Exception as e:
+        print(e)
+
+if __name__ == "__main__":
+    env = sys.argv[1] # first arg should be env either dev or prod
+    start(env)

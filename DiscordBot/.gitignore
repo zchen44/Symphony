@@ -2,3 +2,4 @@ text_alert.json
 __pycache__/
 .venv/
 .vs/
+.credentials.json
