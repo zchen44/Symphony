@@ -167,15 +167,11 @@ async def listViewers(context):
         movieNames = json.load(fp)
         movieNamesKeys = movieNames.keys()
         for movieName in movieNamesKeys:
-            formattedNames += movieName.title() + ": "
             discordUser = client.get_user(movieNames[movieName])
             try:
-                formattedNames += discordUser.name
+                formattedNames += movieName.title() + ": " + discordUser.name + '#' + discordUser.discriminator + "\n"
             except:
-                formattedNames += "Invalid user"
                 print("Invalid user in the movie database: " + str(movieNames[movieName]))
-            finally:
-                formattedNames += "\n"
     await context.channel.send(formattedNames)
 
 # @client.command(name='num_messages',
