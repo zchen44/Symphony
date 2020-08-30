@@ -151,7 +151,7 @@ async def movie_name_registration(context, args):
         nameList = json.load(open('movieNames.json'))
         viewerName = ' '.join(args)
         with open('movieNames.json', 'w+') as fp:
-            nameList[viewerName] = context.author.id
+            nameList[context.author.id] = viewerName
             json.dump(nameList, fp)
             await context.channel.send("Your movie name has been registered")
     else:
@@ -166,12 +166,12 @@ async def listViewers(context):
     with open("movieNames.json", "r") as fp:
         movieNames = json.load(fp)
         movieNamesKeys = movieNames.keys()
-        for movieName in movieNamesKeys:
-            discordUser = client.get_user(movieNames[movieName])
+        for userId in movieNamesKeys:
+            discordUser = client.get_user(userId)
             try:
                 formattedNames += movieName.title() + ": " + discordUser.name + '#' + discordUser.discriminator + "\n"
             except:
-                print("Invalid user in the movie database: " + str(movieNames[movieName]))
+                print("Invalid user in the movie database: " + str(userId))
     await context.channel.send(formattedNames)
 
 # @client.command(name='num_messages',
@@ -269,15 +269,15 @@ async def on_message(message):
         # 			await client.send_message(message.channel, ("SMS message was sent to " + user.display_name))
 
     # Movie List Webhook
-    #748306659423813722 webhook id for test server
-    elif message.author.id == 749034575107457055: #eventually want to move the id somewhere else
+    elif message.author.id == 748306659423813722: #webhook id for test server
+    #elif message.author.id == 749034575107457055: #eventually want to move the id somewhere else
         moviePings = json.loads(message.content)
         movieMessage = '**' + moviePings['movieName'] + '** in ' + str(moviePings['timeUntil']) + ' minutes, '
         with open('movieNames.json', 'r') as fp:
             viewerIDs = json.loads(fp.read())
-            for viewer in moviePings['allViewers']:
+            for viewer, watching in moviePings['allViewers'].items():
                 viewer = viewer.lower().strip()
-                if viewerIDs.get(viewer):
+                if watching and (viewer in viewerIDs.values()):
                     movieMessage += "<@" + str(viewerIDs[viewer]) + "> "
         await message.delete()
         await message.channel.send(movieMessage)
