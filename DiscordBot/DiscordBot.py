@@ -157,6 +157,27 @@ async def movie_name_registration(context, args):
     else:
         await context.channel.send("No name has been entered")
 
+@client.command(name='viewers',
+                description="List the Discord name and Google Sheets name of people registered to receive pings for movies",
+                brief="List movie watcher names",
+                pass_context=True)
+async def listViewers(context):
+    formattedNames = "**Sheet Name: Discord Name\n**"
+    with open("movieNames.json", "r") as fp:
+        movieNames = json.load(fp)
+        movieNamesKeys = movieNames.keys()
+        for movieName in movieNamesKeys:
+            formattedNames += movieName.title() + ": "
+            discordUser = client.get_user(movieNames[movieName])
+            try:
+                formattedNames += discordUser.name
+            except:
+                formattedNames += "Invalid user"
+                print("Invalid user in the movie database: " + str(movieNames[movieName]))
+            finally:
+                formattedNames += "\n"
+    await context.channel.send(formattedNames)
+
 # @client.command(name='num_messages',
 #                description="Tells you how many messages you've posted in this channel maxed at 100",
 #                brief="# of messages in channel",
