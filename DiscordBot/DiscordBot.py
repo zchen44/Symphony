@@ -269,8 +269,8 @@ async def on_message(message):
         # 			await client.send_message(message.channel, ("SMS message was sent to " + user.display_name))
 
     # Movie List Webhook
-    elif message.author.id == 748306659423813722: #webhook id for test server
-    #elif message.author.id == 749034575107457055: #eventually want to move the id somewhere else
+    # webhook id for test server 749034575107457055
+    elif message.author.id == 748306659423813722: #eventually want to move the id somewhere else
         moviePings = json.loads(message.content)
         movieMessage = '**' + moviePings['movieName'] + '** in ' + str(moviePings['timeUntil']) + ' minutes, '
         with open('movieNames.json', 'r') as fp:
@@ -293,7 +293,6 @@ def start(env = 'dev'):
         client.run(token)
     except Exception as e:
         print(e)
-
 if __name__ == "__main__":
     env = sys.argv[1] # first arg should be env either dev or prod
     start(env)
