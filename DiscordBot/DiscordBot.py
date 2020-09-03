@@ -149,7 +149,7 @@ async def movie_name_registration(context, args):
     args.remove("name")
     if args:
         nameList = json.load(open('movieNames.json'))
-        viewerName = ' '.join(args)
+        viewerName = ' '.join(args).title() # convert array of strings into space-seperated string
         with open('movieNames.json', 'w+') as fp:
             nameList[context.author.id] = viewerName
             json.dump(nameList, fp)
