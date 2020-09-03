@@ -276,10 +276,11 @@ async def on_message(message):
         movieMessage = '**' + moviePings['movieName'] + '** in ' + str(moviePings['timeUntil']) + ' minutes, '
         with open('movieNames.json', 'r') as fp:
             viewerIDs = json.loads(fp.read())
+            nameToID = {name:id for id,name in viewerIDs.items()}
             for viewer, watching in moviePings['allViewers'].items():
                 viewer = viewer.lower().strip()
                 if watching and (viewer in viewerIDs.values()):
-                    movieMessage += "<@" + str(viewerIDs[viewer]) + "> "
+                    movieMessage += "<@" + str(nameToID[viewer]) + "> "
         await message.delete()
         await message.channel.send(movieMessage)
 
