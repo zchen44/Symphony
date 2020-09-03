@@ -167,9 +167,9 @@ async def listViewers(context):
         movieNames = json.load(fp)
         movieNamesKeys = movieNames.keys()
         for userId in movieNamesKeys:
-            discordUser = client.get_user(userId)
+            discordUser = client.get_user(int(userId))
             try:
-                formattedNames += movieName.title() + ": " + discordUser.name + '#' + discordUser.discriminator + "\n"
+                formattedNames += movieNames[userId] + ": " + discordUser.name + '#' + discordUser.discriminator + "\n"
             except:
                 print("Invalid user in the movie database: " + str(userId))
     await context.channel.send(formattedNames)
@@ -278,7 +278,7 @@ async def on_message(message):
             viewerIDs = json.loads(fp.read())
             nameToID = {name:id for id,name in viewerIDs.items()}
             for viewer, watching in moviePings['allViewers'].items():
-                viewer = viewer.lower().strip()
+                viewer = viewer.strip()
                 if watching and (viewer in viewerIDs.values()):
                     movieMessage += "<@" + str(nameToID[viewer]) + "> "
         await message.delete()
