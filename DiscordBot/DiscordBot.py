@@ -14,6 +14,8 @@ import string
 import DiscordUtils  # , SMS
 import sys
 
+#testing github integration
+
 # Dictionary of cities where key is the city name and value is a dictionary of metadata like id, country, and coordinates
 CITY_DICT = json.load(open('cities.dict.json', encoding='utf-8'))
 
