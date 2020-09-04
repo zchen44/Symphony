@@ -269,9 +269,7 @@ async def on_message(message):
         # 			await client.send_message(message.channel, ("SMS message was sent to " + user.display_name))
 
     # Movie List Webhook
-    # webhook id for test server dev channel 748306659423813722 
-    # webhook id for horseradish movie night 748306492687646732
-    elif message.author.id == 748306492687646732: #eventually want to move the id somewhere else
+    elif message.author.id == MOVIE_LIST_WEBHOOK:
         moviePings = json.loads(message.content)
         movieMessage = '**' + moviePings['movieName'] + '** in ' + str(moviePings['timeUntil']) + ' minutes, '
         with open('movieNames.json', 'r') as fp:
@@ -292,6 +290,8 @@ def start(env = 'dev'):
         token = resp.json()['token']
         global WEATHER_API_KEY 
         WEATHER_API_KEY = requests.get( (CONDUCTOR_URL + '/credentials/weather'), auth = auth).json()['token']
+        global MOVIE_LIST_WEBHOOK
+        MOVIE_LIST_WEBHOOK = requests.get( (CONDUCTOR_URL + '/credentials/movie_webhook'), auth = auth).json()['token']
         client.run(token)
     except Exception as e:
         print(e)
