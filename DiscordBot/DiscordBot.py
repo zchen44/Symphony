@@ -125,11 +125,11 @@ async def late(context):
                 brief="Register something",
                 pass_context=True)
 async def register(context):
-    task = context.message.content.lower().split()[1:]
+    task = context.message.content.split()[1:]
     try:
-        if "late" in task and "pass" in task:
+        if task[0] == "late" and task[1] == "pass":
             await late_pass_registration(context)
-        elif "movie" in task and "name" in task:
+        elif task[0] == "movie" and task[1] == "name":
             await movie_name_registration(context, task)
         else:
             await context.channel.send("Could not match item to register")
@@ -151,7 +151,7 @@ async def movie_name_registration(context, args):
     args.remove("name")
     if args:
         nameList = json.load(open('movieNames.json'))
-        viewerName = ' '.join(args).title() # convert array of strings into space-seperated string
+        viewerName = ' '.join(args) # convert array of strings into space-seperated string
         with open('movieNames.json', 'w+') as fp:
             nameList[context.author.id] = viewerName
             json.dump(nameList, fp)
