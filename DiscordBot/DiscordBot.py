@@ -291,12 +291,12 @@ def start(env = 'dev'):
         auth = (env, conductor_cred[env])
         resp = requests.get( (CONDUCTOR_URL + '/credentials/discord'), auth = auth)
         token = resp.json()['token']
-        await get_tokens(auth)
+        get_tokens(auth)
         client.run(token)
     except Exception as e:
         print(e)
 
-async def get_tokens(auth):
+def get_tokens(auth):
     try:
         global WEATHER_API_KEY 
         WEATHER_API_KEY = requests.get( (CONDUCTOR_URL + '/credentials/weather'), auth = auth).json()['token']
