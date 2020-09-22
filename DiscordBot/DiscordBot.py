@@ -112,6 +112,7 @@ async def eight_ball(context):
 @client.command(name='late',
                 description="Submits my late pass",
                 brief="late pass",
+                aliases=['latepass'],
                 pass_context=True)
 async def late(context):
     file_path = "images/"+str(context.author.id)+".png"
